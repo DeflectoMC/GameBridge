@@ -34,7 +34,8 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        name: Test Release
+        name: TestRelease
+        tag_name: 0.1.1
         draft: true
         files: |
           build/libs/GameBridge-0.1.1.jar
