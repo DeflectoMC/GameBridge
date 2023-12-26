@@ -1,0 +1,18 @@
+name: GameBridge
+
+version: 0.1
+
+author: Deflecto
+
+description: Allows players to join your server, even if it isn't on a public wifi port
+
+website: https://github.com/DeflectoMC/GameBridge
+
+main: gamebridge.plugin.GameBridgePlugin
+
+commands:
+
+  host:
+    usage: /host
+    permission: gamebridge.host
+    

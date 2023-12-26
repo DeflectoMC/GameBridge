@@ -1,0 +1,169 @@
+buildscript {
+
+	repositories {
+        mavenCentral()
+    }
+
+	dependencies {
+	
+	    //classpath 'io.github.fvarrui:javapackager:1.7.5'
+    }
+}
+
+plugins {
+	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'maven-publish'
+	id 'java'
+	id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'io.github.fvarrui.javapackager.plugin'
+
+
+def ENV = System.getenv()
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+	
+	mavenCentral()
+	jcenter()
+	maven {
+	    url "https://hub.spigotmc.org/nexus/content/repositories/public/"
+	}
+	maven {
+		url "https://jitpack.io"
+	}
+}
+
+
+
+
+shadowJar {
+    zip64 true
+    
+    configurations = [project.configurations.shadow] // ***
+    
+}
+
+remapJar {
+    dependsOn tasks.shadowJar
+    inputFile.set(tasks.shadowJar.archiveFile)
+
+}
+
+task testJar(type: Jar) {
+	archiveClassifier = "test"
+	from sourceSets.test.output
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    maxHeapSize = '2G'
+
+    testLogging {
+        events "passed"
+    }
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencies {
+
+
+	//implementation("junit:junit:4.13"))
+	//implementation("org.mozilla:rhino:1.7.14")
+	//implementation("de.javawi.jstun:jstun:0.7.4")
+	
+	testCompileOnly 'org.jetbrains:annotations:23.0.0'
+
+	// Unit testing for mod metadata
+	testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
+	testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+	
+	//testCompile group "org.junit.jupiter", name "junit-jupiter-api", version "5.6.2"
+	//compile("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+    //compile("org.junit.jupiter:junit-jupiter:5.7.1")
+    //compile(platform('org.junit:junit-bom:5.10.1'))
+    //testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	//Dependency required by Ice4J, even though we don't directly use it
+	//Occasionally a ClassNotFoundError will occur during SDP generation without it
+	//shadow(implementation("org.opentelecoms.sdp:java-sdp-nist-bridge:1.2"))
+	//shadow(implementation("com.jfastnet:jfastnet:0.3.8"))
+	
+	
+	shadow(implementation("org.java-websocket:Java-WebSocket:1.5.4"))
+    shadow(implementation("org.jitsi:ice4j:3.0-66-g1c60acc"))
+    
+    //implementation("com.github.fisherstevenk:kyberJCE:v3.0.0")
+    shadow(implementation("org.bouncycastle:bcprov-jdk18on:1.77"))
+    
+    implementation("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	
+	modImplementation 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+loom {
+	//accessWidenerPath = file("src/main/resources/gamebridge.accesswidener")
+}
+
+processResources {
+	inputs.property "version", project.version
+	
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
+}
+
+
+
+
+mainClassName = "gamebridge.GameBridge"
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "gamebridge.GameBridge"
+    }
+    // ...
+}

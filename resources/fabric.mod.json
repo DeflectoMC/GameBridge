@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "gamebridge",
+  "version": "0.1",
+
+  "name": "GameBridge",
+  "description": "Allows you join servers without requiring them to have a public wifi port. Type /gjoin in game",
+  "authors": [
+    "Deflecto"
+  ],
+
+  "license": "Copyright © DeflectoMC and contributors 2023. Licensed under the Apache 2.0 license",
+  
+  "contact": {
+    "homepage": "https://github.com/DeflectoMC/GameBridge",
+    "issues": "https://github.com/DeflectoMC/GameBridge/issues",
+    "sources": "https://github.com/DeflectoMC/GameBridge"
+  },
+
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "gamebridge.fabric.GameBridgeMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "fabric-api": "*",
+    "minecraft": "*",
+    "java": ">=11"
+  }
+}
