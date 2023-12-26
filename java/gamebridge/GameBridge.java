@@ -254,8 +254,7 @@ public class GameBridge {
 			throw ex;
 		}
 		
-		System.out.println("Received SDP from host:");
-		System.out.println(remoteSDP);
+		System.out.println("Received SDP from host");
 
 		ice.setRemoteSDP(remoteSDP);
 
