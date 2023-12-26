@@ -22,16 +22,22 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Setup Gradle
+    - name: Build Jar Files
       uses: gradle/gradle-build-action@v2.11.1
       with:
         gradle-version: current
         arguments: build
-    - uses: actions/upload-artifact@v3
-      with:
-        name: Artifacts
-        path: build/libs
-    - name: Release
+    - name: Wait for build to finish
+      run: sleep 30s
+      shell: bash
+        
+#    - name: Upload Jars as Artifacts
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: Artifacts
+#        path: build/libs
+        
+    - name: Upload Jars as Release Tag
       uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
