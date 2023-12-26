@@ -12,6 +12,11 @@ import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents.AllowCommand;
 import net.fabricmc.fabric.api.event.Event;
 
+/** Planned to be used later
+*   when more commands are added
+*
+*   A similar system is currently used by GameBridgeMod.java
+*/
 public class CustomCommands {
 	
 	private static Map<String, Consumer<String[]>> commands = new HashMap<>();
