@@ -41,7 +41,7 @@ public class GameBridgePlugin extends JavaPlugin {
 
 		GameBridge.setLogger(this.getLogger());
 
-		String level = getConfig().getString("logging-level", "INFO").toUpperCase();
+		String level = getConfig().getString("logging", "INFO").toUpperCase();
 
 		try {
 			Level logLevel = Level.parse(level);
