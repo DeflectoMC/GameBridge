@@ -5,12 +5,10 @@ buildscript {
 	maven {
             url "https://maven.fabricmc.net"
         }
+	jcenter()
     }
 
-	dependencies {
-	
-	    //classpath 'io.github.fvarrui:javapackager:1.7.5'
-    }
+	dependencies {}
 }
 
 plugins {
