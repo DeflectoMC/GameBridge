@@ -6,7 +6,7 @@ name: Build and Publish
 on: push
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -33,8 +33,10 @@ jobs:
         path: build/libs
     - name: Release
       uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: TestRelease
+        name: 0.1.1
         tag_name: 0.1.1
         draft: true
         files: |
