@@ -131,7 +131,7 @@ public class GameBridgeMod implements ModInitializer {
 				if (command.startsWith("gjoin")) {
 					
 					if (joinTask != null && !joinTask.isDone()) {
-						msg("§cYou are currently trying to join a server already; wait until it is done");
+						msg("§cYou are currently trying to join a server already; please wait until it is finished");
 						return false;
 					}
 					
