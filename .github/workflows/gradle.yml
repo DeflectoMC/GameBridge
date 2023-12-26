@@ -35,6 +35,3 @@ jobs:
       with:
         gradle-version: current
         arguments: build
-        
-    - name: Build with Gradle
-      run: ./gradlew build
