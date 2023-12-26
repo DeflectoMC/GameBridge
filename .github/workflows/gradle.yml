@@ -3,7 +3,9 @@
 
 name: Build and Publish
 
-on: push
+on:
+  push:
+    branches: [ "release" ]
 
 permissions:
   contents: write
@@ -27,9 +29,6 @@ jobs:
       with:
         gradle-version: current
         arguments: build
-    - name: Wait for build to finish
-      run: sleep 30s
-      shell: bash
         
     - name: Upload Jars as Release Tag
       uses: softprops/action-gh-release@v1
@@ -43,6 +42,10 @@ jobs:
           build/libs/GameBridge-0.1.1.jar
           build/libs/GameBridge-0.1.1-sources.jar
 
+
+#    - name: Sleep command (no longer necessary)
+#      run: sleep 30s
+#      shell: bash
             
 #    - name: Upload Jars as Artifacts
 #      uses: actions/upload-artifact@v3
