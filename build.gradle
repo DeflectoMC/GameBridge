@@ -2,9 +2,10 @@ buildscript {
 
 	repositories {
         mavenCentral()
-	maven {
-            url "https://maven.fabricmc.net"
-        }
+        maven {
+		name = 'Fabric'
+		url = 'https://maven.fabricmc.net/'
+	}
 	jcenter()
     }
 
@@ -44,11 +45,17 @@ repositories {
 	
 	mavenCentral()
 	jcenter()
+
+	maven {
+	    name = 'Fabric'
+	    url = 'https://maven.fabricmc.net/'
+	}
+	
 	maven {
 	    url "https://hub.spigotmc.org/nexus/content/repositories/public/"
 	}
 	maven {
-		url "https://jitpack.io"
+	    url "https://jitpack.io"
 	}
 }
 
