@@ -59,6 +59,17 @@ repositories {
 	}
 }
 
+sourceSets {
+        main {
+            java {
+                srcDir 'java'
+            }
+            resources {
+                srcDir 'resources'
+            }
+        }
+}
+
 
 
 
