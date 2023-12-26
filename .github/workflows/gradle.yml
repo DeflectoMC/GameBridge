@@ -25,35 +25,35 @@ jobs:
         echo $RELEASE_VERSION
         echo ${{ env.RELEASE_VERSION }}
     
-#    - name: Set up JDK 17
-#      uses: actions/setup-java@v3
-#      with:
-#        java-version: '17'
-#        distribution: 'temurin'
-#        
-#    - name: Build Jar Files
-#      uses: gradle/gradle-build-action@v2.11.1
-#      with:
-#        gradle-version: current
-#        arguments: build
-#        
-#    - name: Upload Jars as Release Tag
-#      uses: softprops/action-gh-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        name: 0.1.1
-#        tag_name: 0.1.1
-#        draft: true
-#        files: |
-#          build/libs/GameBridge-0.1.1.jar
-#          build/libs/GameBridge-0.1.1-sources.jar
-#        body: |
-#          Test Message
-#          Test 2
-#        append_body: true
-#
-#
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Build Jar Files
+      uses: gradle/gradle-build-action@v2.11.1
+      with:
+        gradle-version: current
+        arguments: build
+        
+    - name: Upload Jars as Release Tag
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        #name: 0.1.1
+        #tag_name: 0.1.1
+        draft: true
+        files: |
+          build/libs/GameBridge-0.1.1.jar
+          build/libs/GameBridge-0.1.1-sources.jar
+        body: |
+          Test Message
+          Test 2
+        append_body: true
+
+
 #    - name: Sleep command (no longer necessary)
 #      run: sleep 30s
 #      shell: bash
