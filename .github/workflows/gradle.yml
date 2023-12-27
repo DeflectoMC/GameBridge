@@ -17,24 +17,33 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Extract branch name
+    - name: Determine the version
       shell: bash
       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
       id: extract_branch
     
-    - name: Set up JDK 17
+    - name: Set up Java 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Build Jar Files
+    - name: Build the jar files
       uses: gradle/gradle-build-action@v2.11.1
       with:
         gradle-version: current
         arguments: build
+
+    - name: Have the project checked by a virus scanner
+      if: ${{ github.event_name == 'push' }}
+      uses: crazy-max/ghaction-virustotal@v4
+      with:
+        vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
+        files: |
+          ./build/libs/*.jar
+      continue-on-error: false
         
-    - name: Upload Jars as Release Tag
+    - name: Publish
       uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,11 +52,39 @@ jobs:
         tag_name: ${{ steps.extract_branch.outputs.branch }}
         draft: true
         files: |
-          build/libs/GameBridge-0.1.1.jar
-          build/libs/GameBridge-0.1.1-sources.jar
+          build/libs/GameBridge-${{ steps.extract_branch.outputs.branch }}.jar
+          build/libs/GameBridge-${{ steps.extract_branch.outputs.branch }}-sources.jar
         body: |
-          Test Message
-          Test 2
+          # First Major Release!
+
+          Lets you join a server with the plugin
+          installed, even if the server doesn't have a
+          public port due to being hosted at home.
+
+          You can host for free.
+          
+          Just drop GameBridge-0.2.0.jar into
+          the plugins folder.
+
+          For players, please drop GameBridge-0.2.0.jar
+          into the Fabric mods folder.
+
+          You can get Fabric here:
+
+          https://fabricmc.net
+
+          You can also use the CurseForge app to
+          install a version of Minecraft with Fabric.
+
+          https://www.curseforge.com/download/app
+
+          Future support for Fabric servers is coming soon.
+
+          ### Server Commands:
+            ```/host - Tells you your server ID```
+
+          ### Client-sided commands:
+            ```/gjoin <server id> - Joins a server with the plugin installed```
         append_body: true
 
 
