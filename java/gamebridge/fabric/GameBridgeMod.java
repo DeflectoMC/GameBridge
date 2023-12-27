@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+
 import org.slf4j.LoggerFactory;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -20,9 +21,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents.AllowCommand;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.Init;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.Join;
 import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
@@ -88,7 +87,7 @@ public class GameBridgeMod implements ModInitializer {
 		}
 	}
 
-	private void auto() {
+	private void autojoin() {
 		if (joinTask != null && !joinTask.isDone()) {
 			msg("§cConnection is currently in progress, please wait until it is finished");
 			return;
@@ -167,7 +166,7 @@ public class GameBridgeMod implements ModInitializer {
 			msg("§aClosed existing proxy");
 		}
 
-		msg("§7§oCreating a proxy...");
+		msg("§7§oConnecting to server...");
 		try {
 			gameBridgeClient = GameBridge.createClient(join_port, joinID);
 		} catch (Exception ex) {
@@ -175,11 +174,15 @@ public class GameBridgeMod implements ModInitializer {
 			msg("§cAn internal error occurred. Perhaps the server is not online? Check [minecraft folder]/logs/latest.log for more info");
 			return;
 		}
+		
+		autojoin();
 
+		/**
 		msg("§7§oSuccessfully connected to " + joinID);
 		msg("§aYou may now join the server!");
 		copymsg("§b§lClick to Copy Server IP", join_address);
 		cmdmsg("§6§lClick to Instantly Join", "/gauto");
+		*/
 
 	}
 
@@ -251,35 +254,18 @@ public class GameBridgeMod implements ModInitializer {
 				lastJoin = System.currentTimeMillis();
 			}
 		});
-		ClientPlayConnectionEvents.JOIN.register(new Join() {
-
-
-			@Override
-			public void onPlayReady(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
-				GameBridge.info("Entered join phase");
-				lastJoin = System.currentTimeMillis();
-			}
-
-
-		});
 
 		ClientReceiveMessageEvents.ALLOW_GAME.register(new AllowGame() {
 
 			@Override
 			public boolean allowReceiveGameMessage(Text text, boolean overlay) {
-				GameBridge.info("Received chat message: " + text.getString());
 				if (lastJoin <= System.currentTimeMillis() - 10_000l) return true;
-				GameBridge.info("Recently joined");
 				if (gameBridgeClient == null || gameBridgeClient.isClosed()) return true;
-				GameBridge.info("Checking for chat bugs");
 				if (text instanceof MutableText == false) return true;
-				GameBridge.info("Text is mutable");
 				var mutable = (MutableText)text;
 				if (mutable.getContent() instanceof TranslatableTextContent == false) return true;
-				GameBridge.info("Text is translatable");
 				var content = (TranslatableTextContent)mutable.getContent();
 				if (!message_bug.equals(content.getKey())) return true;
-				GameBridge.info("Text is correct, cancelling");
 				return false;
 			}
 
@@ -289,11 +275,6 @@ public class GameBridgeMod implements ModInitializer {
 
 			@Override
 			public boolean allowSendCommandMessage(String command) {
-
-				if (command.startsWith("gauto")) {
-					auto();
-					return false;
-				}
 
 				if (command.startsWith("gjoin")) {
 
