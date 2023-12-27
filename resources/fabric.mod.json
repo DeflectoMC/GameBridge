@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "gamebridge",
-  "version": "0.1",
+  "version": "0.2.0",
 
   "name": "GameBridge",
   "description": "Allows you join servers without requiring them to have a public wifi port. Type /gjoin in game",
