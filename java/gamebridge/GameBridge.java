@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +20,30 @@ public class GameBridge {
 	
 	private static Logger log = Logger.getLogger("GameBridge");
 	private static Level level = Level.FINEST;
+	
+	public static class LogEntry {
+		public final Level level;
+		public final String message;
+		public final Exception exception;
+		
+		public LogEntry(Level level, String message, Exception ex) {
+			this.level = level;
+			this.message = message;
+			this.exception = ex;
+		}
+	}
+	
+	public static Consumer<LogEntry> logFunction = (entry) -> {
+		if (entry.level.intValue() >= GameBridge.level.intValue()) {
+			if (entry.exception != null) {
+				log.log(Level.WARNING, entry.message, entry.exception);
+			} else if (entry.level != Level.WARNING) {
+				log.log(Level.INFO, entry.message);
+			} else {
+				log.log(Level.WARNING, entry.message);
+			}
+		}
+	};
 	
 	public static void fixICEConfigIssues(File config) throws Exception {
 		
@@ -53,19 +78,19 @@ public class GameBridge {
 	}
 	
 	public static void info(String message) {
-		log.info(message);
+		logFunction.accept(new LogEntry(Level.INFO, message, null));
 	}
 	
 	public static void warning(String message) {
-		log.warning(message);
+		logFunction.accept(new LogEntry(Level.WARNING, message, null));
 	}
 	
 	public static void log(Level level, String message) {
-		if (level.intValue() >= GameBridge.level.intValue()) log.info(message);
+		logFunction.accept(new LogEntry(level, message, null));
 	}
 	
 	public static void log(Level level, String message, Exception ex) {
-		if (level.intValue() >= GameBridge.level.intValue()) log.log(Level.WARNING, message, ex);
+		logFunction.accept(new LogEntry(level, message, ex));
 	}
 	
 	public static boolean isPortInUse(int port) {

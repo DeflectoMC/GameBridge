@@ -65,6 +65,8 @@ public class GameBridgeHost {
 		
 		var socket = ice.establish(50, TimeUnit.SECONDS).get();
 		
+		GameBridge.info("A player successfully connected to your server. Waiting for them to join");
+		
 		var hostSocket = new HostPeerSocket(tcpPort, socket);
 		connections.add(hostSocket);
 		hostSocket.start();

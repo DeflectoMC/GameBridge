@@ -134,7 +134,7 @@ public class Ice {
 			
 			AgentFreer.map(agent, socket);
 			
-			GameBridge.log(Level.INFO, "A player successfully connected to your server. Waiting for them to join");
+			GameBridge.log(Level.INFO, "Ice connection was a success");
 			
 			var remoteAddress = pair.getRemoteCandidate().getHostAddress().getAddress();
 			var remotePort = pair.getRemoteCandidate().getHostAddress().getPort();
