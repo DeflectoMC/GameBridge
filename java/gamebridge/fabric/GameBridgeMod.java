@@ -240,7 +240,7 @@ public class GameBridgeMod implements ModInitializer {
 				join = join.then(id);
 				dispatcher.register(join);
 
-				dispatcher.register(ClientCommandManager.literal("gauto"));
+				//dispatcher.register(ClientCommandManager.literal("gauto"));
 
 
 			}
