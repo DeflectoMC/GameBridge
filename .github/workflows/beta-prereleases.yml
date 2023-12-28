@@ -1,0 +1,53 @@
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Beta Prerelease
+
+on:
+  push:
+    branches: [ "pre-*.*.*" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Determine the version
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+    
+    - name: Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Build the jar files
+      uses: gradle/gradle-build-action@v2.11.1
+      with:
+        gradle-version: current
+        arguments: build
+
+    - name: Have the jar files checked by a third-party virus scanner
+      if: ${{ github.event_name == 'push' }}
+      uses: crazy-max/ghaction-virustotal@v4
+      with:
+        vt_api_key: ${{ secrets.VT_API_KEY }}
+        files: |
+          ./build/libs/*.jar
+      continue-on-error: false
+
+            
+    - name: Upload Prerelease
+      uses: actions/upload-artifact@v3
+      with:
+        name: Beta Prerelease ({{ steps.extract_branch.outputs.branch }})
+        path: build/libs
+        compression-level: 9
+        retention-days: 60
