@@ -5,7 +5,7 @@ name: Compiling and publishing
 
 on:
   push:
-    branches: [ "*.*.*" ]
+    branches: [ "V*.*.*" ]
 
 permissions:
   contents: write
@@ -50,7 +50,6 @@ jobs:
       with:
         name: ${{ steps.extract_branch.outputs.branch }}
         tag_name: ${{ steps.extract_branch.outputs.branch }}
-        draft: true
         files: |
           build/libs/GameBridge-${{ steps.extract_branch.outputs.branch }}.jar
           build/libs/GameBridge-${{ steps.extract_branch.outputs.branch }}-sources.jar
@@ -86,15 +85,6 @@ jobs:
           ### Client-sided commands:
             ```/gjoin <server id> - Joins a server with the plugin installed```
         append_body: true
-
-
-#    - name: Sleep command (no longer necessary)
-#      run: sleep 30s
-#      shell: bash
             
-#    - name: Upload Jars as Artifacts
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: Artifacts
-#        path: build/libs
+
       
