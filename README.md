@@ -21,6 +21,6 @@ Unfortunately, because this uses WebRTC (which relies on STUN), it does not work
 
 If you're curious, you can also check out my previous project written in Node.js, called [friendjoin](https://github.com/DeflectoMC/friendjoin/).
 
-Note that there are some pretty major differences between these three projects, and security, network etc. will be different depending on which project you are talking about.
+Note that there are some pretty major differences between these three projects, and how security, network etc. is handled will be different depending on which project you are talking about.
 
 
