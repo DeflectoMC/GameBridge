@@ -17,7 +17,7 @@ When you add the jar to your plugins folder, you get a server ID.
 Then, players get to join by typing /gjoin <your server id>!
 
 
-Unfortunately, because this uses WebRTC (which relies on STUN), it does not work on 100% of wifi networks, hence why I am recoding a version without STUN or WebRTC. For that, check out the repository for [Multiplayer-Possible])(https://github.com/DeflectoMC/Multiplayer-Possible/).
+Unfortunately, because this uses WebRTC (which relies on STUN), it does not work on 100% of wifi networks, hence why I am recoding a version without STUN or WebRTC. For that, check out the repository for [Multiplayer-Possible](https://github.com/DeflectoMC/Multiplayer-Possible/).
 
 If you're curious, you can also check out my previous project written in Node.js, called [friendjoin](https://github.com/DeflectoMC/friendjoin/).
 
